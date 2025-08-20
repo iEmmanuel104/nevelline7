@@ -1,110 +1,154 @@
 import React from "react";
-import { Facebook, Twitter, Instagram, Youtube } from "lucide-react";
+import { Facebook, Twitter, Instagram, Youtube, MapPin, Phone, Mail } from "lucide-react";
 
 export const Footer: React.FC = () => {
     return (
-        <footer className="bg-gray-900 text-white pt-16 pb-8">
+        <footer className="bg-gray-900 text-gray-400 pt-16 pb-8">
             <div className="container mx-auto px-4">
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
                     {/* About */}
                     <div>
-                        <h3 className="text-xl font-semibold mb-4">Kumo</h3>
-                        <p className="text-gray-400 mb-4">
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore.
+                        <h3 className="text-2xl font-bold mb-6 text-white">Kumo</h3>
+                        <p className="mb-6 text-sm leading-relaxed">
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna
+                            aliqua.
                         </p>
-                        <div className="flex space-x-4">
-                            <a href="#" className="hover:text-gray-300">
-                                <Facebook className="h-5 w-5" />
-                            </a>
-                            <a href="#" className="hover:text-gray-300">
-                                <Twitter className="h-5 w-5" />
-                            </a>
-                            <a href="#" className="hover:text-gray-300">
-                                <Instagram className="h-5 w-5" />
-                            </a>
-                            <a href="#" className="hover:text-gray-300">
-                                <Youtube className="h-5 w-5" />
-                            </a>
+                        <div className="space-y-2 text-sm">
+                            <div className="flex items-center gap-2">
+                                <MapPin className="h-4 w-4 text-red-500" />
+                                <span>123 Fashion Street, NY 10001</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <Phone className="h-4 w-4 text-red-500" />
+                                <span>+1234 567 890</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <Mail className="h-4 w-4 text-red-500" />
+                                <span>support@kumo.com</span>
+                            </div>
                         </div>
-                    </div>
-
-                    {/* Customer */}
-                    <div>
-                        <h4 className="font-semibold mb-4 uppercase">Customer</h4>
-                        <ul className="space-y-2">
-                            <li>
-                                <a href="#" className="text-gray-400 hover:text-white">
-                                    My Account
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#" className="text-gray-400 hover:text-white">
-                                    Order History
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#" className="text-gray-400 hover:text-white">
-                                    Wish List
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#" className="text-gray-400 hover:text-white">
-                                    Newsletter
-                                </a>
-                            </li>
-                        </ul>
                     </div>
 
                     {/* Shop */}
                     <div>
-                        <h4 className="font-semibold mb-4 uppercase">Shop</h4>
-                        <ul className="space-y-2">
+                        <h4 className="font-semibold mb-6 text-white text-lg">Shop</h4>
+                        <ul className="space-y-3 text-sm">
                             <li>
-                                <a href="#" className="text-gray-400 hover:text-white">
+                                <a href="#" className="hover:text-red-500 transition-colors">
                                     New Arrivals
                                 </a>
                             </li>
                             <li>
-                                <a href="#" className="text-gray-400 hover:text-white">
+                                <a href="#" className="hover:text-red-500 transition-colors">
+                                    Men's Collection
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" className="hover:text-red-500 transition-colors">
+                                    Women's Collection
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" className="hover:text-red-500 transition-colors">
+                                    Kid's Collection
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" className="hover:text-red-500 transition-colors">
                                     Accessories
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#" className="text-gray-400 hover:text-white">
-                                    Men
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#" className="text-gray-400 hover:text-white">
-                                    Women
                                 </a>
                             </li>
                         </ul>
                     </div>
 
-                    {/* Subscribe */}
+                    {/* Support */}
                     <div>
-                        <h4 className="font-semibold mb-4 uppercase">Subscribe</h4>
-                        <p className="text-gray-400 mb-4">Get updates about new products and upcoming sales</p>
-                        <form className="flex">
+                        <h4 className="font-semibold mb-6 text-white text-lg">Support</h4>
+                        <ul className="space-y-3 text-sm">
+                            <li>
+                                <a href="#" className="hover:text-red-500 transition-colors">
+                                    Customer Service
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" className="hover:text-red-500 transition-colors">
+                                    Order Tracking
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" className="hover:text-red-500 transition-colors">
+                                    FAQs
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" className="hover:text-red-500 transition-colors">
+                                    Shipping & Returns
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" className="hover:text-red-500 transition-colors">
+                                    Size Guide
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    {/* Newsletter */}
+                    <div>
+                        <h4 className="font-semibold mb-6 text-white text-lg">Newsletter</h4>
+                        <p className="mb-4 text-sm">Subscribe to get special offers, free giveaways, and updates on new arrivals.</p>
+                        <div className="space-y-3">
                             <input
                                 type="email"
-                                placeholder="Your email"
-                                className="flex-1 px-4 py-2 bg-gray-800 text-white rounded-l focus:outline-none focus:bg-gray-700"
+                                placeholder="Your email address"
+                                className="w-full px-4 py-3 bg-gray-800 text-white placeholder-gray-500 rounded-sm focus:outline-none focus:ring-2 focus:ring-red-500"
                             />
-                            <button className="px-6 py-2 bg-blue-600 hover:bg-blue-700 rounded-r transition-colors">Subscribe</button>
-                        </form>
+                            <button className="w-full bg-red-500 hover:bg-red-600 text-white py-3 rounded-sm transition-colors font-medium">
+                                Subscribe
+                            </button>
+                        </div>
+                        <div className="flex space-x-3 mt-6">
+                            <a
+                                href="#"
+                                className="w-10 h-10 bg-gray-800 hover:bg-red-500 rounded-full flex items-center justify-center transition-colors"
+                            >
+                                <Facebook className="h-4 w-4" />
+                            </a>
+                            <a
+                                href="#"
+                                className="w-10 h-10 bg-gray-800 hover:bg-red-500 rounded-full flex items-center justify-center transition-colors"
+                            >
+                                <Twitter className="h-4 w-4" />
+                            </a>
+                            <a
+                                href="#"
+                                className="w-10 h-10 bg-gray-800 hover:bg-red-500 rounded-full flex items-center justify-center transition-colors"
+                            >
+                                <Instagram className="h-4 w-4" />
+                            </a>
+                            <a
+                                href="#"
+                                className="w-10 h-10 bg-gray-800 hover:bg-red-500 rounded-full flex items-center justify-center transition-colors"
+                            >
+                                <Youtube className="h-4 w-4" />
+                            </a>
+                        </div>
                     </div>
                 </div>
 
                 {/* Bottom */}
-                <div className="border-t border-gray-800 pt-8 flex flex-wrap items-center justify-between">
-                    <p className="text-gray-400">© 2024 Kumo. Designed by ThemezHub.</p>
-                    <div className="flex space-x-4 mt-4 md:mt-0">
-                        <img src="/api/placeholder/40/25" alt="Payment" className="h-6" />
-                        <img src="/api/placeholder/40/25" alt="Payment" className="h-6" />
-                        <img src="/api/placeholder/40/25" alt="Payment" className="h-6" />
-                        <img src="/api/placeholder/40/25" alt="Payment" className="h-6" />
+                <div className="border-t border-gray-800 pt-8">
+                    <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+                        <p className="text-sm">© 2024 Kumo. All rights reserved. Designed by ThemezHub.</p>
+                        <div className="flex items-center gap-2">
+                            <span className="text-sm">We Accept:</span>
+                            <div className="flex space-x-2">
+                                <img src="https://img.icons8.com/color/48/000000/visa.png" alt="Visa" className="h-8" />
+                                <img src="https://img.icons8.com/color/48/000000/mastercard.png" alt="Mastercard" className="h-8" />
+                                <img src="https://img.icons8.com/color/48/000000/paypal.png" alt="PayPal" className="h-8" />
+                                <img src="https://img.icons8.com/color/48/000000/stripe.png" alt="Stripe" className="h-8" />
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

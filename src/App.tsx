@@ -1,33 +1,31 @@
-// src/App.tsx
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Header } from "./components/layout/Header";
 import { Navigation } from "./components/layout/Navigation";
 import { Footer } from "./components/layout/Footer";
-import { HeroSection } from "./components/sections/HeroSection";
-import { FeatureBoxes } from "./components/sections/FeatureBoxes";
-import { TrendingCategories } from "./components/sections/TrendingCategories";
-import { DealOfTheDay } from "./components/sections/DealOfTheDay";
-import { TrendingProducts } from "./components/sections/TrendingProducts";
-import { Services } from "./components/sections/Services";
-import { Newsletter } from "./components/sections/Newsletter";
-import { NewUpdates } from "./components/sections/NewUpdates";
+import { CartProvider } from "./context/CartContext";
+import { HomePage } from "./pages/HomePage";
+import { CollectionsPage } from "./pages/CollectionsPage";
+import { ProductPage } from "./pages/ProductPage";
+import { CheckoutPage } from "./pages/CheckoutPage";
 
 function App() {
     return (
-        <div className="min-h-screen bg-white">
-            <Header />
-            <Navigation />
-            <main>
-                <HeroSection />
-                <FeatureBoxes />
-                <TrendingCategories />
-                <TrendingProducts />
-                <DealOfTheDay />
-                <NewUpdates />
-                <Services />
-                <Newsletter />
-            </main>
-            <Footer />
-        </div>
+        <CartProvider>
+            <Router>
+                <div className="min-h-screen bg-white">
+                    <Header />
+                    <Navigation />
+                    <Routes>
+                        <Route path="/" element={<HomePage />} />
+                        <Route path="/collections" element={<CollectionsPage />} />
+                        <Route path="/collections/:category" element={<CollectionsPage />} />
+                        <Route path="/product/:id" element={<ProductPage />} />
+                        <Route path="/checkout" element={<CheckoutPage />} />
+                    </Routes>
+                    <Footer />
+                </div>
+            </Router>
+        </CartProvider>
     );
 }
 

@@ -4,10 +4,9 @@ export interface Product {
     price: number;
     originalPrice?: number;
     image: string;
+    backImage?: string;
     badge?: 'NEW' | 'SALE' | 'HOT' | 'SOLD OUT';
     discount?: number;
-    rating?: number;
-    reviewCount?: number;
     colors?: string[];
 }
 

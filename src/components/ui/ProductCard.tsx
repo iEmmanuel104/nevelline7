@@ -1,110 +1,140 @@
 import React from "react";
-import { Heart, ShoppingBag, Eye, ArrowUpDown } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { Heart, ShoppingBag, Eye } from "lucide-react";
 import type { Product } from "../../types";
 import { Badge } from "./Badge";
 import { cn } from "../../lib/utils";
+import { useCart } from "../../context/CartContext";
 
 interface ProductCardProps {
     product: Product;
     className?: string;
+    onQuickView?: (product: Product) => void;
 }
 
-export const ProductCard: React.FC<ProductCardProps> = ({ product, className }) => {
+export const ProductCard: React.FC<ProductCardProps> = ({ product, className, onQuickView }) => {
+    const navigate = useNavigate();
+    const { addToCart } = useCart();
     const [isHovered, setIsHovered] = React.useState(false);
 
     const badgeVariant = product.badge?.toLowerCase().replace(" ", "") as any;
 
+    const handleAddToCart = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        addToCart({ ...product, quantity: 1 });
+    };
+
+    const handleQuickView = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        if (onQuickView) {
+            onQuickView(product);
+        }
+    };
+
+
     return (
         <div
-            className={cn("group relative overflow-hidden rounded-lg bg-white", className)}
+            className={cn("product-card group relative bg-white rounded-sm overflow-hidden", className)}
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
         >
             {/* Badge */}
             {product.badge && (
-                <div className="absolute top-4 left-4 z-10">
+                <div className="absolute top-3 left-3 z-10">
                     <Badge variant={badgeVariant}>{product.badge}</Badge>
                 </div>
             )}
 
             {/* Discount Badge */}
             {product.discount && (
-                <div className="absolute top-4 right-4 z-10">
+                <div className="absolute top-3 right-3 z-10">
                     <Badge variant="discount">-{product.discount}%</Badge>
                 </div>
             )}
 
-            {/* Image Container */}
-            <div className="relative h-96 overflow-hidden bg-gray-100">
-                <img
-                    src={product.image}
-                    alt={product.name}
-                    className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110"
-                />
-
-                {/* Quick View Button */}
-                <div
-                    className={cn(
-                        "absolute bottom-0 left-0 right-0 bg-black text-white py-3 text-center transition-transform duration-300",
-                        isHovered ? "translate-y-0" : "translate-y-full"
+            {/* Image Container with Flip Animation */}
+            <div className="relative h-80 overflow-hidden bg-gray-50">
+                <div className="relative w-full h-full [perspective:1000px]">
+                    {/* Front Image */}
+                    <img
+                        src={product.image}
+                        alt={product.name}
+                        className={cn(
+                            "absolute inset-0 w-full h-full object-cover transition-all duration-700 [backface-visibility:hidden]",
+                            isHovered && product.backImage ? "[transform:rotateY(180deg)]" : "[transform:rotateY(0deg)]"
+                        )}
+                    />
+                    
+                    {/* Back Image */}
+                    {product.backImage && (
+                        <img
+                            src={product.backImage}
+                            alt={`${product.name} back view`}
+                            className={cn(
+                                "absolute inset-0 w-full h-full object-cover transition-all duration-700 [backface-visibility:hidden] [transform:rotateY(-180deg)]",
+                                isHovered ? "[transform:rotateY(0deg)]" : "[transform:rotateY(-180deg)]"
+                            )}
+                        />
                     )}
-                >
-                    <button className="flex items-center justify-center gap-2 w-full">
-                        <Eye className="h-4 w-4" />
-                        Quick View
-                    </button>
                 </div>
 
-                {/* Action Buttons */}
+                {/* Heart Button - Add to Cart */}
+                <button
+                    onClick={handleAddToCart}
+                    className="absolute top-3 right-3 bg-white p-2 rounded-full shadow-md hover:shadow-lg transition-all z-20 hover:scale-110"
+                >
+                    <Heart className="h-4 w-4 text-gray-600 hover:text-red-500 transition-colors" />
+                </button>
+
+                {/* Quick Actions Overlay */}
                 <div
                     className={cn(
-                        "absolute right-4 top-20 flex flex-col gap-2 transition-opacity duration-300",
-                        isHovered ? "opacity-100" : "opacity-0"
+                        "absolute inset-0 bg-black/40 flex items-center justify-center gap-3 transition-opacity duration-300",
+                        isHovered ? "opacity-100" : "opacity-0 pointer-events-none"
                     )}
                 >
-                    <button className="bg-white p-2 rounded-full shadow-md hover:bg-gray-100 transition-colors">
-                        <ArrowUpDown className="h-4 w-4" />
+                    <button 
+                        onClick={handleQuickView}
+                        className="bg-white p-3 rounded-full shadow-md hover:shadow-lg transform hover:scale-110 transition-all"
+                        title="Quick View"
+                    >
+                        <Eye className="h-5 w-5 text-gray-700" />
                     </button>
-                    <button className="bg-white p-2 rounded-full shadow-md hover:bg-gray-100 transition-colors">
-                        <Heart className="h-4 w-4" />
-                    </button>
-                    <button className="bg-white p-2 rounded-full shadow-md hover:bg-gray-100 transition-colors">
-                        <ShoppingBag className="h-4 w-4" />
+                    <button 
+                        onClick={handleAddToCart}
+                        className="bg-white p-3 rounded-full shadow-md hover:shadow-lg transform hover:scale-110 transition-all"
+                        title="Add to Cart"
+                    >
+                        <ShoppingBag className="h-5 w-5 text-gray-700" />
                     </button>
                 </div>
             </div>
 
             {/* Product Info */}
-            <div className="p-4">
+            <div className="p-4 text-center">
+                <h3 
+                    onClick={() => navigate(`/product/${product.id}`)}
+                    className="font-medium text-gray-900 mb-3 hover:text-red-500 transition-colors cursor-pointer"
+                >
+                    {product.name}
+                </h3>
+
                 {/* Color Options */}
                 {product.colors && (
-                    <div className="flex gap-1 mb-3">
+                    <div className="flex justify-center gap-1 mb-3">
                         {product.colors.map((color, index) => (
-                            <button key={index} className="w-4 h-4 rounded-full border border-gray-300" style={{ backgroundColor: color }} />
+                            <button
+                                key={index}
+                                className="w-4 h-4 rounded-full border-2 border-gray-300 hover:border-gray-500 transition-colors"
+                                style={{ backgroundColor: color }}
+                            />
                         ))}
                     </div>
                 )}
 
-                {/* Rating */}
-                {product.rating !== undefined && (
-                    <div className="flex items-center gap-1 mb-2">
-                        {[...Array(5)].map((_, i) => (
-                            <svg
-                                key={i}
-                                className={cn("w-4 h-4", i < (product.rating || 0) ? "text-yellow-400 fill-current" : "text-gray-300")}
-                                viewBox="0 0 20 20"
-                            >
-                                <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z" />
-                            </svg>
-                        ))}
-                        {product.reviewCount !== undefined && <span className="text-sm text-gray-500">({product.reviewCount} Reviews)</span>}
-                    </div>
-                )}
-
-                <h3 className="font-medium text-gray-900 mb-2">{product.name}</h3>
-                <div className="flex items-center gap-2">
-                    <span className="text-lg font-semibold">${product.price}</span>
-                    {product.originalPrice && <span className="text-sm text-gray-500 line-through">${product.originalPrice}</span>}
+                <div className="flex items-center justify-center gap-2">
+                    <span className="text-lg font-bold text-gray-900">₦{product.price.toLocaleString()}</span>
+                    {product.originalPrice && <span className="text-sm text-gray-400 line-through">₦{product.originalPrice.toLocaleString()}</span>}
                 </div>
             </div>
         </div>
