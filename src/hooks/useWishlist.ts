@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-const WISHLIST_KEY = 'nevelline_wishlist';
+const WISHLIST_KEY = 'nevelline7s_wishlist';
 
 export const useWishlist = () => {
     const [wishlist, setWishlist] = useState<string[]>([]);

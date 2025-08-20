@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ShoppingBag, Search, Menu, X } from "lucide-react";
 import { useCart } from "../../context/CartContext";
+import { Logo } from "../ui/Logo";
 
 export const Navigation: React.FC = () => {
     const navigate = useNavigate();
@@ -16,8 +17,8 @@ export const Navigation: React.FC = () => {
                     <div className="flex items-center justify-between h-20">
                         {/* Logo */}
                         <div className="flex items-center">
-                            <Link to="/" className="text-3xl font-bold text-gray-900">
-                                Nevelline
+                            <Link to="/">
+                                <Logo size="md" variant="dark" />
                             </Link>
                         </div>
 

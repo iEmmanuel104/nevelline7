@@ -1,5 +1,6 @@
 import React from "react";
 import { Facebook, Twitter, Instagram, Youtube, MapPin, Phone, Mail } from "lucide-react";
+import { Logo } from "../ui/Logo";
 
 export const Footer: React.FC = () => {
     return (
@@ -8,23 +9,25 @@ export const Footer: React.FC = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
                     {/* About */}
                     <div>
-                        <h3 className="text-2xl font-bold mb-6 text-white">Kumo</h3>
+                        <div className="mb-6">
+                            <Logo size="md" variant="light" />
+                        </div>
                         <p className="mb-6 text-sm leading-relaxed">
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna
-                            aliqua.
+                            Your ultimate fashion destination. Discover the latest trends and timeless pieces 
+                            that define your unique style.
                         </p>
                         <div className="space-y-2 text-sm">
                             <div className="flex items-center gap-2">
                                 <MapPin className="h-4 w-4 text-red-500" />
-                                <span>123 Fashion Street, NY 10001</span>
+                                <span>Lagos, Nigeria</span>
                             </div>
                             <div className="flex items-center gap-2">
                                 <Phone className="h-4 w-4 text-red-500" />
-                                <span>+1234 567 890</span>
+                                <span>+234 800 000 0000</span>
                             </div>
                             <div className="flex items-center gap-2">
                                 <Mail className="h-4 w-4 text-red-500" />
-                                <span>support@kumo.com</span>
+                                <span>hello@nevelline7s.com</span>
                             </div>
                         </div>
                     </div>
@@ -139,7 +142,7 @@ export const Footer: React.FC = () => {
                 {/* Bottom */}
                 <div className="border-t border-gray-800 pt-8">
                     <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-                        <p className="text-sm">© 2024 Kumo. All rights reserved. Designed by ThemezHub.</p>
+                        <p className="text-sm">© 2024 Nevelline7s. All rights reserved. Your Style Destination.</p>
                         <div className="flex items-center gap-2">
                             <span className="text-sm">We Accept:</span>
                             <div className="flex space-x-2">
