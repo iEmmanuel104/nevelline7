@@ -20,6 +20,8 @@ export interface Product {
   description?: string;
   tags?: string[];
   badge?: 'NEW' | 'SALE' | 'HOT' | 'SOLD OUT';
+  featured?: boolean;
+  trending?: boolean;
   isActive?: boolean;
   views?: number;
   purchases?: number;

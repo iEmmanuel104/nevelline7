@@ -11,7 +11,7 @@ interface CategoryCardProps {
 export const CategoryCard: React.FC<CategoryCardProps> = ({ category, className }) => {
     return (
         <Link
-            to={`/collections/${category.link.split('/').pop()}`}
+            to={category.link || `/collections/${category.slug || category.name.toLowerCase().replace(/\s+/g, '-')}`}
             className={cn("category-card group flex flex-col items-center justify-center p-6 bg-gray-50 rounded-lg hover:bg-white hover:shadow-xl transition-all duration-300 hover:scale-105 hover:-translate-y-2", className)}
         >
             <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center mb-4 group-hover:bg-black group-hover:text-white transition-all duration-300 shadow-sm">

@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
 import { ProductCard } from "../ui/ProductCard";
 import { ProductQuickView } from "../ui/ProductQuickView";
-import { trendingProducts, mensProducts, womensProducts, kidsProducts } from "../../data/mockData";
+import api from "../../lib/api";
 import type { Product } from "../../types";
 import { cn } from "../../lib/utils";
 
@@ -28,14 +29,30 @@ export const TrendingProducts: React.FC = () => {
         { id: "kids", label: "KIDS" },
     ];
 
+    const { data: productsData, isLoading } = useQuery({
+        queryKey: ['products'],
+        queryFn: async () => {
+            const response = await api.get('/products?limit=20');
+            return response.data.products;
+        }
+    });
+
     const getProductsByTab = (): Product[] => {
+        if (!productsData) return [];
+        
         switch (activeTab) {
             case "womens":
-                return womensProducts;
+                return productsData.filter((product: Product) => 
+                    product.category === "womens-wear"
+                ).slice(0, 8);
             case "kids":
-                return kidsProducts;
+                return productsData.filter((product: Product) => 
+                    product.category === "kids-wear"
+                ).slice(0, 8);
             default:
-                return [...trendingProducts, ...mensProducts].slice(0, 8);
+                return productsData.filter((product: Product) => 
+                    product.category === "mens-wear" || product.featured
+                ).slice(0, 8);
         }
     };
 
@@ -69,13 +86,24 @@ export const TrendingProducts: React.FC = () => {
 
                 {/* Products Grid */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                    {displayProducts.map((product) => (
-                        <ProductCard 
-                            key={product.id} 
-                            product={product} 
-                            onQuickView={handleQuickView}
-                        />
-                    ))}
+                    {isLoading ? (
+                        // Loading skeleton
+                        Array.from({ length: 8 }).map((_, index) => (
+                            <div key={index} className="animate-pulse">
+                                <div className="bg-gray-200 aspect-square rounded-lg mb-4"></div>
+                                <div className="bg-gray-200 h-4 rounded mb-2"></div>
+                                <div className="bg-gray-200 h-4 rounded w-2/3"></div>
+                            </div>
+                        ))
+                    ) : (
+                        displayProducts.map((product) => (
+                            <ProductCard 
+                                key={product._id || product.id} 
+                                product={product} 
+                                onQuickView={handleQuickView}
+                            />
+                        ))
+                    )}
                 </div>
 
                 {/* Explore More Button */}

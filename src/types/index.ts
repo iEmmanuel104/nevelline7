@@ -4,8 +4,10 @@ export type { Product, CartItem } from './product';
 export interface Category {
     id: string;
     name: string;
+    slug?: string;
     icon: string;
-    link: string;
+    link?: string;
+    image?: string;
 }
 
 export interface UpdateCard {
