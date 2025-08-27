@@ -92,7 +92,7 @@ export const StatsSection: React.FC = () => {
             <div className="container mx-auto px-4">
                 <div className="text-center mb-12">
                     <h2 className="text-4xl font-bold text-white mb-4">
-                        Why Choose Nevelline7s?
+                        Why Choose Nevellines?
                     </h2>
                     <p className="text-gray-300 text-lg">
                         Join thousands of satisfied customers who trust us for their fashion needs

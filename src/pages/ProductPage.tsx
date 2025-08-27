@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
 import { Heart, ShoppingCart, Minus, Plus } from 'lucide-react';
 import { Badge } from '../components/ui/Badge';
 import { useCart } from '../context/CartContext';
-import { trendingProducts, featuredProducts, mensProducts, womensProducts, kidsProducts } from '../data/mockData';
-import type { Product } from '../types';
+import { productService } from '../services/productService';
 
 export function ProductPage() {
     const { id } = useParams<{ id: string }>();
@@ -12,12 +12,26 @@ export function ProductPage() {
     const { addToCart } = useCart();
     const [quantity, setQuantity] = useState(1);
     const [selectedColor, setSelectedColor] = useState<string | null>(null);
+    const [selectedSize, setSelectedSize] = useState<string | null>(null);
 
-    // Find product from all product arrays
-    const allProducts = [...trendingProducts, ...featuredProducts, ...mensProducts, ...womensProducts, ...kidsProducts];
-    const product = allProducts.find((p: Product) => p.id === id);
+    // Fetch product from API
+    const { data: product, isLoading, error } = useQuery({
+        queryKey: ['product', id],
+        queryFn: () => productService.getProduct(id!),
+        enabled: !!id,
+    });
 
-    if (!product) {
+    if (isLoading) {
+        return (
+            <div className="min-h-screen flex items-center justify-center">
+                <div className="text-center">
+                    <div className="text-lg">Loading product...</div>
+                </div>
+            </div>
+        );
+    }
+
+    if (error || !product) {
         return (
             <div className="min-h-screen flex items-center justify-center">
                 <div className="text-center">
@@ -49,7 +63,7 @@ export function ProductPage() {
                     {/* Product Image */}
                     <div className="relative">
                         <img 
-                            src={product.image} 
+                            src={product.image || product.images?.[0] || '/placeholder.png'} 
                             alt={product.name}
                             className="w-full h-[600px] object-cover rounded-lg"
                         />
@@ -100,6 +114,28 @@ export function ProductPage() {
                                             }`}
                                             style={{ backgroundColor: color }}
                                         />
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Size Selection */}
+                        {product.sizes && product.sizes.length > 0 && (
+                            <div>
+                                <h3 className="text-lg font-semibold mb-3">Size</h3>
+                                <div className="flex gap-3">
+                                    {product.sizes.map((size) => (
+                                        <button
+                                            key={size}
+                                            onClick={() => setSelectedSize(size)}
+                                            className={`px-4 py-2 border rounded-lg transition-all ${
+                                                selectedSize === size 
+                                                    ? 'border-black bg-black text-white' 
+                                                    : 'border-gray-300 hover:border-gray-400'
+                                            }`}
+                                        >
+                                            {size}
+                                        </button>
                                     ))}
                                 </div>
                             </div>

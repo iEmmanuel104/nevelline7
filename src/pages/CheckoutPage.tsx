@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Trash2, Plus, Minus } from 'lucide-react';
+import { Trash2, Plus, Minus, Loader2 } from 'lucide-react';
 import { useCart } from '../context/CartContext';
+import { useMutation } from '@tanstack/react-query';
+import api from '../lib/api';
 
 export function CheckoutPage() {
     const navigate = useNavigate();
@@ -15,6 +17,16 @@ export function CheckoutPage() {
         state: '',
         zipCode: '',
         phone: ''
+    });
+    
+    const [isProcessingOrder, setIsProcessingOrder] = useState(false);
+
+    // Create order mutation
+    const createOrderMutation = useMutation({
+        mutationFn: async (orderData: any) => {
+            const { data } = await api.post('/orders', orderData);
+            return data.data;
+        }
     });
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -32,47 +44,92 @@ export function CheckoutPage() {
             return;
         }
 
-        // Paystack Inline Checkout
-        const handler = (window as any).PaystackPop.setup({
-            key: 'pk_test_your_paystack_public_key_here', // Replace with your Paystack public key
-            email: formData.email,
-            amount: getTotal() * 100, // Amount in kobo (multiply by 100)
-            currency: 'NGN',
-            ref: `ORDER-${Date.now()}`, // Generate unique reference
-            metadata: {
-                custom_fields: [
-                    {
-                        display_name: "Customer Name",
-                        variable_name: "customer_name",
-                        value: `${formData.firstName} ${formData.lastName}`
-                    },
-                    {
-                        display_name: "Phone Number",
-                        variable_name: "phone_number",
-                        value: formData.phone
-                    },
-                    {
-                        display_name: "Items",
-                        variable_name: "cart_items",
-                        value: cart.map(item => `${item.name} x${item.quantity}`).join(', ')
-                    }
-                ]
-            },
-            callback: function(response: any) {
-                // Payment successful
-                alert(`Payment successful! Reference: ${response.reference}\\nTotal: ₦${getTotal().toLocaleString()}`);
-                
-                // Clear cart and redirect
-                clearCart();
-                navigate('/', { replace: true });
-            },
-            onClose: function() {
-                // Payment cancelled
-                alert('Payment was cancelled');
-            }
-        });
-        
-        handler.openIframe();
+        if (isProcessingOrder || createOrderMutation.isPending) {
+            return;
+        }
+
+        setIsProcessingOrder(true);
+
+        try {
+            // 1. First create the order on the server
+            const orderData = {
+                customerName: `${formData.firstName} ${formData.lastName}`.trim(),
+                customerEmail: formData.email,
+                customerPhone: formData.phone,
+                customerAddress: `${formData.address}, ${formData.city}, ${formData.state} ${formData.zipCode}`,
+                items: cart.map(item => ({
+                    productId: item._id || item.id,
+                    name: item.name,
+                    price: item.price,
+                    quantity: item.quantity,
+                    image: item.image,
+                    color: item.selectedColor,
+                    size: (item as any).selectedSize
+                })),
+                subtotal: getTotal(),
+                shipping: 0, // Free shipping for now
+                total: getTotal(),
+                paymentMethod: 'paystack',
+                status: 'pending',
+                paymentStatus: 'pending'
+            };
+
+            const order = await createOrderMutation.mutateAsync(orderData);
+            const paymentReference = `ORDER-${order.orderNumber}-${Date.now()}`;
+
+            // 2. Initialize Paystack payment with order reference
+            const handler = (window as any).PaystackPop.setup({
+                key: import.meta.env.VITE_PAYSTACK_PUBLIC_KEY,
+                email: formData.email,
+                amount: getTotal() * 100, // Amount in kobo
+                currency: 'NGN',
+                ref: paymentReference,
+                metadata: {
+                    orderId: order._id,
+                    orderNumber: order.orderNumber,
+                    custom_fields: [
+                        {
+                            display_name: "Customer Name",
+                            variable_name: "customer_name",
+                            value: orderData.customerName
+                        },
+                        {
+                            display_name: "Phone Number",
+                            variable_name: "phone_number",
+                            value: formData.phone
+                        },
+                        {
+                            display_name: "Order Number",
+                            variable_name: "order_number",
+                            value: order.orderNumber
+                        }
+                    ]
+                },
+                callback: function(response: any) {
+                    // Payment successful - redirect to success page
+                    console.log('Payment successful:', response);
+                    
+                    // Clear cart
+                    clearCart();
+                    
+                    // Redirect to success page with payment reference
+                    navigate(`/payment-success?reference=${response.reference}`, { replace: true });
+                },
+                onClose: function() {
+                    // Payment was cancelled or closed
+                    console.log('Payment cancelled');
+                    setIsProcessingOrder(false);
+                }
+            });
+            
+            // Open Paystack payment modal
+            handler.openIframe();
+
+        } catch (error) {
+            console.error('Error creating order:', error);
+            alert('Failed to create order. Please try again.');
+            setIsProcessingOrder(false);
+        }
     };
 
     if (cart.length === 0) {
@@ -126,7 +183,7 @@ export function CheckoutPage() {
                                         </div>
                                         <div className="flex items-center gap-2">
                                             <button 
-                                                onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                                                onClick={() => updateQuantity((item._id || item.id)!, item.quantity - 1)}
                                                 className="p-1 hover:bg-gray-100 rounded"
                                                 disabled={item.quantity <= 1}
                                             >
@@ -134,13 +191,13 @@ export function CheckoutPage() {
                                             </button>
                                             <span className="w-8 text-center">{item.quantity}</span>
                                             <button 
-                                                onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                                                onClick={() => updateQuantity((item._id || item.id)!, item.quantity + 1)}
                                                 className="p-1 hover:bg-gray-100 rounded"
                                             >
                                                 <Plus className="w-4 h-4" />
                                             </button>
                                             <button 
-                                                onClick={() => removeFromCart(item.id)}
+                                                onClick={() => removeFromCart((item._id || item.id)!)}
                                                 className="p-1 text-red-500 hover:bg-red-50 rounded ml-2"
                                             >
                                                 <Trash2 className="w-4 h-4" />
@@ -278,9 +335,17 @@ export function CheckoutPage() {
                                 <div className="pt-6">
                                     <button
                                         type="submit"
-                                        className="w-full bg-black text-white py-4 rounded-lg font-semibold hover:bg-gray-800 transition-colors"
+                                        disabled={isProcessingOrder || createOrderMutation.isPending}
+                                        className="w-full bg-black text-white py-4 rounded-lg font-semibold hover:bg-gray-800 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed flex items-center justify-center"
                                     >
-                                        Complete Order - ₦{getTotal().toLocaleString()}
+                                        {isProcessingOrder || createOrderMutation.isPending ? (
+                                            <>
+                                                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                                                Processing...
+                                            </>
+                                        ) : (
+                                            `Pay Now - ₦${getTotal().toLocaleString()}`
+                                        )}
                                     </button>
                                 </div>
                             </form>

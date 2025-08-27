@@ -98,7 +98,7 @@ export const Logo: React.FC<LogoProps> = ({
                     className={`font-semibold ${currentSize.text} ${currentColors.text} tracking-wide`}
                     style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}
                 >
-                    Nevelline
+                    NEVELLINE
                 </span>
                 <span 
                     className={`font-bold ${currentSize.text === 'text-xl' ? 'text-2xl' : currentSize.text === 'text-2xl' ? 'text-3xl' : 'text-5xl'} ml-0.5`}
@@ -110,7 +110,7 @@ export const Logo: React.FC<LogoProps> = ({
                         backgroundClip: 'text'
                     }}
                 >
-                    7s
+                    S
                 </span>
             </div>
         </div>

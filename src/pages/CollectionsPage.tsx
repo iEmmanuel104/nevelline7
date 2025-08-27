@@ -1,15 +1,41 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
 import { ProductCard } from '../components/ui/ProductCard';
 import { ProductQuickView } from '../components/ui/ProductQuickView';
-import { categories, mensProducts, womensProducts, kidsProducts, trendingProducts, featuredProducts } from '../data/mockData';
-import type { Product } from '../types';
+import { productService } from '../services/productService';
+import { categoryService } from '../services/categoryService';
+import type { Product } from '../types/product';
 
 export function CollectionsPage() {
     const { category } = useParams<{ category: string }>();
     const [selectedCategory, setSelectedCategory] = useState(category || 'all');
     const [quickViewProduct, setQuickViewProduct] = useState<Product | null>(null);
     const [isQuickViewOpen, setIsQuickViewOpen] = useState(false);
+
+    // Update selected category when URL changes
+    useEffect(() => {
+        setSelectedCategory(category || 'all');
+    }, [category]);
+
+    // Fetch categories
+    const { data: categories = [] } = useQuery({
+        queryKey: ['categories'],
+        queryFn: categoryService.getCategories,
+    });
+
+    // Fetch products based on selected category
+    const { data: products = [], isLoading } = useQuery({
+        queryKey: ['products', selectedCategory],
+        queryFn: async () => {
+            if (selectedCategory === 'all') {
+                const { products } = await productService.getProducts({ limit: 20 });
+                return products;
+            } else {
+                return await productService.getProductsByCategory(selectedCategory);
+            }
+        },
+    });
 
     const handleQuickView = (product: Product) => {
         setQuickViewProduct(product);
@@ -20,23 +46,6 @@ export function CollectionsPage() {
         setIsQuickViewOpen(false);
         setQuickViewProduct(null);
     };
-
-    const getProductsByCategory = (): Product[] => {
-        switch (selectedCategory) {
-            case 'mens-wear':
-                return mensProducts;
-            case 'womens-wear':
-                return womensProducts;
-            case 'kids-wear':
-                return kidsProducts;
-            case 'accessories':
-                return featuredProducts;
-            default:
-                return [...trendingProducts, ...featuredProducts, ...mensProducts.slice(0, 2), ...womensProducts.slice(0, 2)];
-        }
-    };
-
-    const products = getProductsByCategory();
 
     return (
         <div className="min-h-screen bg-gray-50 pt-8">
@@ -60,10 +69,10 @@ export function CollectionsPage() {
                     </button>
                     {categories.map((cat) => (
                         <button 
-                            key={cat.id}
-                            onClick={() => setSelectedCategory(cat.link.split('/').pop()!)}
+                            key={cat._id}
+                            onClick={() => setSelectedCategory(cat.slug)}
                             className={`px-6 py-2 rounded-full transition-all ${
-                                selectedCategory === cat.link.split('/').pop()
+                                selectedCategory === cat.slug
                                     ? 'bg-black text-white' 
                                     : 'bg-white text-gray-600 hover:bg-gray-100'
                             }`}
@@ -74,15 +83,36 @@ export function CollectionsPage() {
                 </div>
 
                 {/* Products Grid */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                    {products.map((product) => (
-                        <ProductCard 
-                            key={product.id} 
-                            product={product} 
-                            onQuickView={handleQuickView}
-                        />
-                    ))}
-                </div>
+                {isLoading ? (
+                    <div className="flex justify-center items-center h-64">
+                        <div className="text-lg">Loading products...</div>
+                    </div>
+                ) : (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                        {products.map((product) => (
+                            <ProductCard 
+                                key={product._id} 
+                                product={{
+                                    ...product,
+                                    id: product._id,
+                                    image: product.image || product.images?.[0] || ''
+                                }} 
+                                onQuickView={handleQuickView}
+                            />
+                        ))}
+                    </div>
+                )}
+
+                {!isLoading && products.length === 0 && (
+                    <div className="text-center py-12">
+                        <h3 className="text-lg font-medium text-gray-900 mb-2">No products found</h3>
+                        <p className="text-gray-600">
+                            {selectedCategory === 'all' 
+                                ? 'No products are currently available.' 
+                                : `No products found in ${selectedCategory} category.`}
+                        </p>
+                    </div>
+                )}
 
                 {/* Quick View Modal */}
                 <ProductQuickView

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { X, Plus, Minus, ShoppingCart, MessageCircle, Heart } from 'lucide-react';
 import { Badge } from './Badge';
 import { useCart } from '../../context/CartContext';
@@ -13,6 +14,7 @@ interface ProductQuickViewProps {
 
 export const ProductQuickView: React.FC<ProductQuickViewProps> = ({ product, isOpen, onClose }) => {
     const { addToCart } = useCart();
+    const navigate = useNavigate();
     const [quantity, setQuantity] = useState(1);
     const [selectedColor, setSelectedColor] = useState<string | null>(null);
     const [currentImage, setCurrentImage] = useState(0);
@@ -34,7 +36,11 @@ export const ProductQuickView: React.FC<ProductQuickViewProps> = ({ product, isO
 
     if (!isOpen || !product) return null;
 
-    const images = [product.image, ...(product.backImage ? [product.backImage] : [])];
+    const images = [
+        product.image, 
+        ...(product.backImage ? [product.backImage] : []),
+        ...(product.gallery || [])
+    ].filter(Boolean);
 
     const handleAddToCart = () => {
         addToCart({
@@ -46,7 +52,7 @@ export const ProductQuickView: React.FC<ProductQuickViewProps> = ({ product, isO
     };
 
     const handleWhatsAppContact = () => {
-        const message = `Hi Nevelline7s! I'm interested in purchasing the ${product.name} (₦${product.price.toLocaleString()}). Can you please provide more details?`;
+        const message = `Hi Nevellines! I'm interested in purchasing the ${product.name} (₦${product.price.toLocaleString()}). Can you please provide more details?`;
         const whatsappUrl = `https://wa.me/2348000000000?text=${encodeURIComponent(message)}`;
         window.open(whatsappUrl, '_blank');
     };
@@ -59,37 +65,11 @@ export const ProductQuickView: React.FC<ProductQuickViewProps> = ({ product, isO
             selectedColor: selectedColor || undefined
         });
         
-        // Setup Paystack payment
-        const handler = (window as any).PaystackPop.setup({
-            key: 'pk_test_your_paystack_public_key_here',
-            email: 'customer@nevelline.com', // You can add an email input if needed
-            amount: (product.price * quantity) * 100, // Amount in kobo
-            currency: 'NGN',
-            ref: `QUICK-ORDER-${Date.now()}`,
-            metadata: {
-                custom_fields: [
-                    {
-                        display_name: "Product",
-                        variable_name: "product_name",
-                        value: product.name
-                    },
-                    {
-                        display_name: "Quantity",
-                        variable_name: "quantity",
-                        value: quantity.toString()
-                    }
-                ]
-            },
-            callback: function(response: any) {
-                alert(`Payment successful! Reference: ${response.reference}\\nTotal: ₦${(product.price * quantity).toLocaleString()}`);
-                onClose();
-            },
-            onClose: function() {
-                console.log('Payment cancelled');
-            }
-        });
+        // Close the modal
+        onClose();
         
-        handler.openIframe();
+        // Navigate to checkout page where user can enter their details
+        navigate('/checkout');
     };
 
     return (

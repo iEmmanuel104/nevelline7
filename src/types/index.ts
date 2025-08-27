@@ -1,14 +1,5 @@
-export interface Product {
-    id: string;
-    name: string;
-    price: number;
-    originalPrice?: number;
-    image: string;
-    backImage?: string;
-    badge?: 'NEW' | 'SALE' | 'HOT' | 'SOLD OUT';
-    discount?: number;
-    colors?: string[];
-}
+// Product interface moved to types/product.ts
+export type { Product, CartItem } from './product';
 
 export interface Category {
     id: string;

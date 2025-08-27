@@ -27,7 +27,7 @@ export const Footer: React.FC = () => {
                             </div>
                             <div className="flex items-center gap-2">
                                 <Mail className="h-4 w-4 text-red-500" />
-                                <span>hello@nevelline7s.com</span>
+                                <span>hello@nevellines.com</span>
                             </div>
                         </div>
                     </div>
@@ -142,7 +142,7 @@ export const Footer: React.FC = () => {
                 {/* Bottom */}
                 <div className="border-t border-gray-800 pt-8">
                     <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-                        <p className="text-sm">© 2024 Nevelline7s. All rights reserved. Your Style Destination.</p>
+                        <p className="text-sm">© 2024 Nevellines. All rights reserved. Your Style Destination.</p>
                         <div className="flex items-center gap-2">
                             <span className="text-sm">We Accept:</span>
                             <div className="flex space-x-2">

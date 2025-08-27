@@ -24,3 +24,7 @@ dist-ssr
 *.sw?
 # ref
 # .claude
+
+backend
+.env
+.env.local
