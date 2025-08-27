@@ -1,10 +1,26 @@
 import axios from 'axios';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+// Ensure API_URL has proper protocol
+const getApiUrl = () => {
+  const envUrl = import.meta.env.VITE_API_URL;
+  
+  if (!envUrl) {
+    return 'http://localhost:5000/api';
+  }
+  
+  // If URL doesn't start with http:// or https://, add https://
+  if (!envUrl.startsWith('http://') && !envUrl.startsWith('https://')) {
+    return `https://${envUrl}`;
+  }
+  
+  return envUrl;
+};
+
+const API_URL = getApiUrl();
 
 export const api = axios.create({
   baseURL: API_URL,
-  withCredentials: true,
+  withCredentials: import.meta.env.DEV, // Only send credentials in development
   headers: {
     'Content-Type': 'application/json',
   },
