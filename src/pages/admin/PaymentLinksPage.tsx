@@ -18,7 +18,6 @@ import {
   RefreshCw,
   Trash2,
   CheckCircle,
-  CheckCircle2,
   XCircle,
   Timer,
   Search,
@@ -177,16 +176,6 @@ export default function AdminPaymentLinksPage() {
     return () => setRefreshInterval(null);
   }, [paymentLinks]);
 
-  // Status helpers
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'completed': return 'bg-green-100 text-green-700';
-      case 'pending': return 'bg-yellow-100 text-yellow-700';
-      case 'failed': return 'bg-red-100 text-red-700';
-      case 'expired': return 'bg-gray-100 text-gray-700';
-      default: return 'bg-blue-100 text-blue-700';
-    }
-  };
 
   const getStatusIcon = (status: string) => {
     switch (status) {
