@@ -20,7 +20,7 @@ const API_URL = getApiUrl();
 
 export const api = axios.create({
   baseURL: API_URL,
-  withCredentials: import.meta.env.DEV, // Only send credentials in development
+  withCredentials: true, // Always send credentials for admin authentication
   headers: {
     'Content-Type': 'application/json',
   },
