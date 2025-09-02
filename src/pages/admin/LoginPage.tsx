@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Navigate } from 'react-router-dom';
-import { useAdmin } from '../../context/AdminContext';
+import { useAdmin } from '../../hooks/useAdmin';
 import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
 import { Label } from '../../components/ui/label';
@@ -10,8 +10,8 @@ import { AlertCircle } from 'lucide-react';
 export default function AdminLoginPage() {
   const navigate = useNavigate();
   const { admin, login, isLoading } = useAdmin();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('admin@nevelline.com');
+  const [password, setPassword] = useState('admin123');
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -28,8 +28,9 @@ export default function AdminLoginPage() {
     try {
       await login(email, password);
       navigate('/admin/dashboard');
-    } catch (err: any) {
-      setError(err.message || 'Login failed. Please try again.');
+    } catch (err: unknown) {
+      const errorMessage = err instanceof Error ? err.message : 'Login failed. Please try again.';
+      setError(errorMessage);
     } finally {
       setIsSubmitting(false);
     }
@@ -48,7 +49,12 @@ export default function AdminLoginPage() {
       <Card className="w-full max-w-md p-8">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-gray-900">Admin Login</h1>
-          <p className="text-gray-600 mt-2">Sign in to access the admin dashboard</p>
+          <p className="text-gray-600 mt-2">Default credentials are pre-filled</p>
+          <div className="mt-4 p-3 bg-blue-50 text-blue-700 rounded-md text-sm">
+            <p><strong>Email:</strong> admin@nevelline.com</p>
+            <p><strong>Password:</strong> admin123</p>
+            <p className="mt-1 text-xs text-blue-600">Session persists for 1 year</p>
+          </div>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -59,7 +65,7 @@ export default function AdminLoginPage() {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="admin@nevelline.com"
+              placeholder="Pre-filled with default"
               required
               disabled={isSubmitting}
               className="mt-1"
@@ -73,7 +79,7 @@ export default function AdminLoginPage() {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="Enter your password"
+              placeholder="Pre-filled with default"
               required
               disabled={isSubmitting}
               className="mt-1"

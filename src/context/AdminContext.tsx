@@ -1,28 +1,19 @@
-import React, { createContext, useContext } from 'react';
+import React from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { authService } from '../services/authService';
-import type { Admin } from '../services/authService';
-
-interface AdminContextType {
-  admin: Admin | null | undefined;
-  isLoading: boolean;
-  isError: boolean;
-  login: (email: string, password: string) => Promise<void>;
-  logout: () => Promise<void>;
-  refetch: () => void;
-}
-
-const AdminContext = createContext<AdminContextType | undefined>(undefined);
+import { AdminContext } from '../contexts/AdminContext';
 
 export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const queryClient = useQueryClient();
 
-  // Query for checking auth status
+  // Query for checking auth status with persistent cache
   const { data, isLoading, isError, refetch } = useQuery({
     queryKey: ['admin'],
     queryFn: authService.verify,
-    retry: false,
+    retry: 1, // Allow one retry
     refetchOnWindowFocus: false,
+    staleTime: 1000 * 60 * 60 * 24, // Consider data fresh for 24 hours
+    gcTime: 1000 * 60 * 60 * 24 * 30, // Keep in cache for 30 days
   });
 
   // Login mutation
@@ -30,6 +21,9 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     mutationFn: authService.login,
     onSuccess: (data) => {
       queryClient.setQueryData(['admin'], data);
+      // Store success in localStorage for extra persistence
+      localStorage.setItem('adminLoggedIn', 'true');
+      localStorage.setItem('adminEmail', data.admin.email);
     },
   });
 
@@ -39,6 +33,9 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     onSuccess: () => {
       queryClient.setQueryData(['admin'], null);
       queryClient.clear();
+      // Clear localStorage
+      localStorage.removeItem('adminLoggedIn');
+      localStorage.removeItem('adminEmail');
     },
   });
 
@@ -66,10 +63,3 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   );
 };
 
-export const useAdmin = () => {
-  const context = useContext(AdminContext);
-  if (context === undefined) {
-    throw new Error('useAdmin must be used within an AdminProvider');
-  }
-  return context;
-};

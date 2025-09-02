@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, Outlet, useLocation, Navigate } from 'react-router-dom';
-import { useAdmin } from '../../context/AdminContext';
+import { useAdmin } from '../../hooks/useAdmin';
 import { 
   LayoutDashboard, 
   Package, 
