@@ -50,7 +50,7 @@ export default function AdminLoginPage() {
       <Card className="w-full max-w-md p-8">
         <div className="text-center mb-8">
           <div className="flex justify-center mb-6">
-            <Logo size="xl" variant="dark" />
+            <Logo size="lg" variant="dark" showIcon={true} />
           </div>
           <h1 className="text-3xl font-bold text-gray-900">Admin Login</h1>
           <p className="text-gray-600 mt-2">Default credentials are pre-filled</p>

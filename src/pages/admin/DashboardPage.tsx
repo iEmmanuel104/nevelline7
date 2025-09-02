@@ -20,11 +20,11 @@ const stats = statsResponse?.stats;
     <div className="p-6">
       <div className="flex items-center justify-between mb-8">
         <div className="flex items-center gap-4">
-          <Logo size="md" variant="dark" showText={false} />
+          <Logo size="md" variant="dark" showIcon={false} />
           <h1 className="text-3xl font-bold">Dashboard Overview</h1>
         </div>
         <div className="text-sm text-gray-500">
-          Welcome back to Nevellines Admin
+          Welcome back to NEVELLINE Admin
         </div>
       </div>
 

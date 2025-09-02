@@ -51,7 +51,7 @@ export default function AdminLayout() {
       {/* Mobile header */}
       <div className="lg:hidden fixed top-0 left-0 right-0 z-50 bg-white shadow-sm border-b border-gray-100">
         <div className="flex items-center justify-between px-4 py-3">
-          <Logo size="sm" variant="dark" />
+          <Logo size="sm" variant="dark" showIcon={true} />
           <button
             onClick={() => setSidebarOpen(!sidebarOpen)}
             className="p-2 bg-gray-50 rounded-md"
@@ -66,8 +66,8 @@ export default function AdminLayout() {
         sidebarOpen ? 'translate-x-0' : '-translate-x-full'
       } lg:translate-x-0 fixed inset-y-0 left-0 w-64 bg-white shadow-lg transition-transform duration-200 ease-in-out z-40`}>
         <div className="p-6 border-b border-gray-100">
-          <Logo size="lg" variant="dark" />
-          <p className="text-sm text-gray-600 mt-2 ml-15">Admin Dashboard</p>
+          <Logo size="lg" variant="dark" showIcon={true} />
+          <p className="text-sm text-gray-600 mt-2">Admin Dashboard</p>
         </div>
 
         <nav className="px-4">
