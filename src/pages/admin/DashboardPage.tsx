@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { productService } from '../../services/productService';
 import { Card } from '../../components/ui/card';
+import { Logo } from '../../components/ui/Logo';
 import { Package, ShoppingBag, AlertTriangle, TrendingUp } from 'lucide-react';
 
 export default function AdminDashboardPage() {
@@ -17,7 +18,15 @@ const stats = statsResponse?.stats;
 
   return (
     <div className="p-6">
-      <h1 className="text-3xl font-bold mb-8">Dashboard Overview</h1>
+      <div className="flex items-center justify-between mb-8">
+        <div className="flex items-center gap-4">
+          <Logo size="md" variant="dark" showText={false} />
+          <h1 className="text-3xl font-bold">Dashboard Overview</h1>
+        </div>
+        <div className="text-sm text-gray-500">
+          Welcome back to Nevellines Admin
+        </div>
+      </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         <Card className="p-6">

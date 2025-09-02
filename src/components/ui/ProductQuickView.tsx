@@ -52,7 +52,7 @@ export const ProductQuickView: React.FC<ProductQuickViewProps> = ({ product, isO
     };
 
     const handleWhatsAppContact = () => {
-        const message = `Hi Nevellines! I'm interested in purchasing the ${product.name} (₦${product.price.toLocaleString()}). Can you please provide more details?`;
+        const message = `Hi Nevelline! I'm interested in purchasing the ${product.name} (₦${product.price.toLocaleString()}). Can you please provide more details?`;
         const whatsappUrl = `https://wa.me/2348000000000?text=${encodeURIComponent(message)}`;
         window.open(whatsappUrl, '_blank');
     };

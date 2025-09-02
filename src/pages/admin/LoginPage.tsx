@@ -5,6 +5,7 @@ import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
 import { Label } from '../../components/ui/label';
 import { Card } from '../../components/ui/card';
+import { Logo } from '../../components/ui/Logo';
 import { AlertCircle } from 'lucide-react';
 
 export default function AdminLoginPage() {
@@ -48,6 +49,9 @@ export default function AdminLoginPage() {
     <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
       <Card className="w-full max-w-md p-8">
         <div className="text-center mb-8">
+          <div className="flex justify-center mb-6">
+            <Logo size="xl" variant="dark" />
+          </div>
           <h1 className="text-3xl font-bold text-gray-900">Admin Login</h1>
           <p className="text-gray-600 mt-2">Default credentials are pre-filled</p>
           <div className="mt-4 p-3 bg-blue-50 text-blue-700 rounded-md text-sm">

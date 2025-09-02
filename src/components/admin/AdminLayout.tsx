@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link, Outlet, useLocation, Navigate } from 'react-router-dom';
 import { useAdmin } from '../../hooks/useAdmin';
+import { Logo } from '../ui/Logo';
 import { 
   LayoutDashboard, 
   Package, 
@@ -47,23 +48,26 @@ export default function AdminLayout() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Mobile sidebar toggle */}
-      <div className="lg:hidden fixed top-4 left-4 z-50">
-        <button
-          onClick={() => setSidebarOpen(!sidebarOpen)}
-          className="p-2 bg-white rounded-md shadow-md"
-        >
-          {sidebarOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-        </button>
+      {/* Mobile header */}
+      <div className="lg:hidden fixed top-0 left-0 right-0 z-50 bg-white shadow-sm border-b border-gray-100">
+        <div className="flex items-center justify-between px-4 py-3">
+          <Logo size="sm" variant="dark" />
+          <button
+            onClick={() => setSidebarOpen(!sidebarOpen)}
+            className="p-2 bg-gray-50 rounded-md"
+          >
+            {sidebarOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+          </button>
+        </div>
       </div>
 
       {/* Sidebar */}
       <div className={`${
         sidebarOpen ? 'translate-x-0' : '-translate-x-full'
       } lg:translate-x-0 fixed inset-y-0 left-0 w-64 bg-white shadow-lg transition-transform duration-200 ease-in-out z-40`}>
-        <div className="p-6">
-          <h2 className="text-2xl font-bold text-gray-900">Nevelline</h2>
-          <p className="text-sm text-gray-600">Admin Dashboard</p>
+        <div className="p-6 border-b border-gray-100">
+          <Logo size="lg" variant="dark" />
+          <p className="text-sm text-gray-600 mt-2 ml-15">Admin Dashboard</p>
         </div>
 
         <nav className="px-4">
@@ -106,7 +110,7 @@ export default function AdminLayout() {
 
       {/* Main content */}
       <div className="lg:ml-64">
-        <div className="min-h-screen">
+        <div className="min-h-screen pt-16 lg:pt-0">
           <Outlet />
         </div>
       </div>

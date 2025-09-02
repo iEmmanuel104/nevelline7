@@ -299,7 +299,7 @@ export default function AdminPaymentLinksPage() {
       
       const link = document.createElement('a');
       link.href = url;
-      link.download = `nevellines-payment-qr-${productName || reference}.png`;
+      link.download = `nevelline-payment-qr-${productName || reference}.png`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -674,7 +674,7 @@ export default function AdminPaymentLinksPage() {
                         className="mx-auto mb-3"
                         style={{ maxWidth: '200px' }}
                       />
-                      <p className="text-xs text-gray-600 mb-3">Branded QR code for Nevellines</p>
+                      <p className="text-xs text-gray-600 mb-3">Branded QR code for Nevelline</p>
                       <div className="flex justify-center gap-2">
                         <Button
                           size="sm"

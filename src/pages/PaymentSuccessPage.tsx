@@ -315,8 +315,8 @@ export function PaymentSuccessPage() {
       <div className="max-w-2xl mx-auto px-4 py-8 text-center">
         <p className="text-sm text-gray-500">
           Need help? Contact our support team at{' '}
-          <a href="mailto:support@nevellines.com" className="text-blue-600 hover:underline">
-            support@nevellines.com
+          <a href="mailto:support@nevelline.com" className="text-blue-600 hover:underline">
+            support@nevelline.com
           </a>
         </p>
       </div>
